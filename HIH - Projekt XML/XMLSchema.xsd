@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="hipertext" type="hipertextType" />
+
+	<xsd:element name="image">
+		<xsd:complexType>
+		<xsd:complexContent>
+			<xsd:extension base="adressType">
+				<xsd:attribute ref="number" use="optional" />
+				<xsd:attribute name="size" use="required">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="[x][1-9]"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+			</xsd:extension>	
+		</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="link" type="adressType" />
+
+	<xsd:attribute name="number" type="unionType"/>
+
+	<xsd:simpleType name="numberintegerType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="1" />
+			<xsd:maxInclusive value="5" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+
+	<xsd:simpleType name="numberStringType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="unionType" >
+		<xsd:union memberTypes="numberintegerType numberStringType"/>
+    </xsd:simpleType>
+
+	<xsd:attribute name="kind" type="kindType"/>
+
+	<xsd:simpleType name="typeslistType">
+		<xsd:restriction base="listType">
+			<xsd:minLength value="4"/>
+			<xsd:maxLength value="9"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="listType">
+		<xsd:list itemType="listItemType"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="listItemType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="5"/>
+			<xsd:maxLength value="15"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:element name="typeslist" type="typeslistType"/>
+
+	<xsd:complexType name="adressType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="source" use="required">
+					<xsd:simpleType>
+					<xsd:restriction base="xsd:anyURI">
+						<xsd:maxLength value="100" />
+					</xsd:restriction>
+				</xsd:simpleType>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="hipertextType">
+		<xsd:sequence>
+			<xsd:element name="about">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="description" type="descriptionType" />
+						<xsd:element name="extrainformation" type="extrainformationType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="history" >
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="description" type="descriptionType" />
+						<xsd:element name="extrainformation" type="extrainformationType" />
+						<xsd:element name="constructor" type="constructorType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="types" >
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="typeslist" />
+						<xsd:element name="type" type="typeType" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="descriptionType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="length" use="optional">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="short" />
+							<xsd:enumeration value="long" />
+					</xsd:restriction>
+				</xsd:simpleType>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="extrainformationType">
+		<xsd:group ref="extraGroup" />
+		<xsd:attribute ref="kind" use="required" />
+	</xsd:complexType>
+
+	<xsd:group name="extraGroup">
+		<xsd:choice>
+			<xsd:element ref="image"/>
+			<xsd:element ref="link"/>
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:simpleType name="kindType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="links" />
+			<xsd:enumeration value="images" />
+			<xsd:enumeration value="both" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="shortStringType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="30" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="constructorType">
+		<xsd:sequence>
+			<xsd:element name="name" type="shortStringType" />
+			<xsd:element name="surname" type="shortStringType" />
+			<xsd:element name="birth" type="xsd:gYear" />
+			<xsd:element name="death" type="xsd:gYear" />
+			<xsd:element name="description" type="descriptionType" />
+			<xsd:element name="life" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="typeType">
+		<xsd:sequence>
+			<xsd:element name="name" type="shortStringType" />
+			<xsd:element name="description" type="descriptionType" />
+			<xsd:element name="images">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="image" maxOccurs="unbounded" />
+					</xsd:sequence>
+					<xsd:attribute name="howmany" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="1" />
+								<xsd:maxInclusive value="3" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element ref="link" minOccurs="0" />
+		</xsd:sequence>
+		<xsd:attribute ref="number" use="required" />
+	</xsd:complexType>
+
+</xsd:schema>

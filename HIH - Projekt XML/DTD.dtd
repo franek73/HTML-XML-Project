@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT hipertext (about, history, types)>
+
+<!ENTITY % source "source CDATA #REQUIRED">
+<!ENTITY % number "number CDATA #IMPLIED">
+
+<!ELEMENT about (description, extrainformation)>
+<!ELEMENT description (#PCDATA)>
+<!ATTLIST description length (short|long) #IMPLIED>
+<!ELEMENT extrainformation (link | image)>
+<!ATTLIST extrainformation kind CDATA #IMPLIED>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link %source;>
+
+<!ELEMENT history (description, extrainformation, constructor)>
+
+<!ELEMENT constructor (name, surname, birth, death, description, life)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT surname (#PCDATA)>
+<!ELEMENT birth (#PCDATA)>
+<!ELEMENT death (#PCDATA)>
+<!ELEMENT life (#PCDATA)>
+
+<!ELEMENT types (typeslist, type+)>
+<!ELEMENT typeslist (#PCDATA)>
+
+<!ELEMENT type (name, description, images, link*)>
+<!ATTLIST type %number;>
+<!ELEMENT images (image+)>
+<!ELEMENT image (#PCDATA)>
+<!ATTLIST images howmany CDATA #IMPLIED>
+<!ATTLIST image size CDATA "x1">
+<!ATTLIST image %source;>
+<!ATTLIST image %number;>
